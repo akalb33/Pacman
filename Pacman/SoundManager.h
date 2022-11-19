@@ -1,0 +1,65 @@
+#pragma once
+#include <SFML/Audio.hpp>
+#include <string>
+#include <vector>
+
+class SoundManager
+{
+public:
+   enum Sound
+   {
+      background,
+      dot,
+      ghostDeath,
+      fruit,
+      fruitBounce,
+      death
+   };
+
+   SoundManager()
+   {
+      AddSound(background, "background.wav", 100.0f, true);
+      AddSound(dot, "Ms. Pac Man Pill.wav");
+      AddSound(ghostDeath, "Ghost.wav"); 
+      AddSound(fruit, "Fruit.wav");
+      AddSound(fruitBounce, "fruitBounce.wav", 100.0f, true);
+      AddSound(death, "Died.wav");
+      // >  AddSound  < here
+   }
+
+   void AddSound(Sound sound,
+                 std::string fileName, 
+                 float defaultVolume = 100.0f, 
+                 bool loop = false,
+                 float pitch = 1.0f);
+   void Play(Sound sound);
+   void Play(Sound sound, float volume);
+   void StopAll();
+   void Stop(Sound sound);
+   void Pause(Sound sound);
+   void UnPause(Sound sound);
+   void PauseAll();
+   void UnPauseAll();
+
+private:
+   static const unsigned int MAX_SOUNDS = 20;
+   static const unsigned int MAX_SIMULTANEOUS_SOUNDS = 10;
+
+   struct SoundSetting
+   {
+      sf::SoundBuffer mSoundBuffer;
+      float mDefaultVolume;
+      bool mLoop;
+      float mPitch;
+   };
+
+   SoundSetting mSoundSettings[MAX_SOUNDS];
+
+   struct InProgressSound
+   {
+      Sound mSound;
+      sf::Sound mSFSound;
+   };
+
+   InProgressSound mInProgressSound[MAX_SIMULTANEOUS_SOUNDS];
+};
